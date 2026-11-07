@@ -158,9 +158,10 @@ function openKits(){pn.innerHTML='<div><button class="x" id="x110x">✖</button>
 kb.onclick=openKits;
 let _hk='';
 function uiStep(){const hudOn=$$('hud')&&$$('hud').classList.contains('on');const loggedIn=!$$('ap')||$$('ap').style.display==='none';
- const tm=$$('lbTeam');let pnl=tm&&tm.parentElement;while(pnl&&pnl.parentElement&&pnl.parentElement!==document.body&&pnl.getBoundingClientRect().height<250)pnl=pnl.parentElement;const pr=pnl&&tm.offsetParent!==null?pnl.getBoundingClientRect():null;
+ const mp=$$('lbPlayer');const pr=mp&&mp.offsetParent!==null?mp.getBoundingClientRect():null;
  const kd=(!hudOn&&!inMatch()&&pr&&pr.width>0)?'block':'none';if(kb.style.display!==kd)kb.style.display=kd;
- if(pr){let top=pr.top;const eb=[...pnl.parentElement.children].find(x=>x!==pnl&&/Elkapva/i.test(x.textContent||'')&&x.getBoundingClientRect().bottom<=pr.top+30);if(eb)top=Math.min(top,eb.getBoundingClientRect().top);const L=Math.round(pr.left+20)+'px',T=Math.max(4,Math.round(top-36))+'px',Wd=Math.round(pr.width)+'px';if(kb.style.left!==L)kb.style.left=L;if(kb.style.top!==T)kb.style.top=T;if(kb.style.width!==Wd)kb.style.width=Wd}const kt='🎒 KIT: '+KITS[KIT].e+' '+KITS[KIT].n;if(kb.textContent!==kt)kb.textContent=kt;
+ if(pr){let w=pr.width;const bl=[...document.querySelectorAll('body *')].find(x=>x.children.length<4&&/^BÉRLET/.test((x.textContent||'').trim())&&x.getBoundingClientRect().left>pr.left);const br=bl&&bl.getBoundingClientRect();if(br&&br.top<pr.bottom+70&&br.left>pr.left)w=Math.min(w,br.left-pr.left-10);
+  const L=Math.round(pr.left)+'px',T=Math.round(pr.bottom+15)+'px',Wd=Math.round(w)+'px';if(kb.style.left!==L)kb.style.left=L;if(kb.style.top!==T)kb.style.top=T;if(kb.style.width!==Wd)kb.style.width=Wd}const kt='🎒 KIT: '+KITS[KIT].e+' '+KITS[KIT].n;if(kb.textContent!==kt)kb.textContent=kt;
  if(!normal()){if(hud.style.display!=='none')hud.style.display='none';return}
  const now=performance.now(),sl=SLOTS(),id=sl[MAG.sel],cd=Math.max(0,((MAG.cd[id]||0)-now)/1000);
  const h='<div>'+KITS[KIT].e+' '+KITS[KIT].n+' · 🔮 '+Math.floor(MAG.mana)+'/'+MAG.max+'</div><div class="bar"><i style="width:'+Math.round(MAG.mana/MAG.max*100)+'%"></i></div><div>'+SP[id][0]+(SP[id][1]?' ('+SP[id][1]+')':'')+(cd>0?' ⏳'+cd.toFixed(0):' ✅')+'</div><div class="sl">'+sl.map((s,i)=>'<b class="'+(i===MAG.sel?'on':'')+'">'+SP[s][0].split(' ')[0]+'</b>').join('')+'</div><div style="opacity:.6;font-size:10px;margin-top:3px">É varázsol · Á vált'+(FLY?' · ✈️ E kiszáll':'')+'</div>';
