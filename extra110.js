@@ -144,7 +144,7 @@ function magStep(dt){const now=performance.now();MAG.mana=Math.min(MAG.max,MAG.m
 const css=document.createElement('style');css.textContent=`#x110h{position:fixed;right:14px;bottom:150px;z-index:40;background:rgba(15,23,42,.82);color:#fff;border:1px solid #6d28d9;border-radius:12px;padding:8px 10px;font:600 12px sans-serif;min-width:190px;display:none;pointer-events:none}
 #x110h .bar{height:8px;background:#1e1b4b;border-radius:4px;overflow:hidden;margin:4px 0}#x110h .bar i{display:block;height:100%;background:linear-gradient(90deg,#7c3aed,#22d3ee)}
 #x110h .sl{display:flex;gap:3px;margin-top:4px}#x110h .sl b{flex:1;text-align:center;font-size:15px;padding:2px 0;border-radius:6px;background:#312e81;opacity:.55}#x110h .sl b.on{opacity:1;outline:2px solid #facc15}
-#x110k{position:fixed;left:14px;bottom:14px;z-index:60;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border:0;border-radius:12px;padding:10px 14px;font:800 14px sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);display:none}
+#x110k{position:fixed;left:14px;top:200px;z-index:60;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border:0;border-radius:12px;padding:10px 14px;font:800 14px sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);display:none}
 #x110p{position:fixed;inset:0;z-index:9000;background:rgba(2,6,23,.85);display:none;align-items:center;justify-content:center}#x110p>div{background:#0f172a;color:#fff;border:2px solid #7c3aed;border-radius:16px;padding:18px;max-width:900px;width:calc(100% - 32px);max-height:88vh;overflow:auto;font-family:sans-serif}
 #x110p .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-top:10px}#x110p .c{background:#1e293b;border:2px solid #334155;border-radius:12px;padding:9px;cursor:pointer;font-size:12px}#x110p .c:hover{border-color:#a78bfa}#x110p .c.on{border-color:#facc15;background:#312e81}
 #x110p .c h4{margin:0 0 4px;font-size:15px}#x110p .x{float:right;background:#ef4444;color:#fff;border:0;border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:800}`;document.head.appendChild(css);
@@ -158,12 +158,14 @@ function openKits(){pn.innerHTML='<div><button class="x" id="x110x">✖</button>
 kb.onclick=openKits;
 let _hk='';
 function uiStep(){const hudOn=$$('hud')&&$$('hud').classList.contains('on');const loggedIn=!$$('ap')||$$('ap').style.display==='none';
- const kd=(!hudOn&&!inMatch())?'block':'none';if(kb.style.display!==kd)kb.style.display=kd;const kt='🎒 KIT: '+KITS[KIT].e+' '+KITS[KIT].n;if(kb.textContent!==kt)kb.textContent=kt;
+ const tm=$$('lbTeam');let pnl=tm&&tm.parentElement;while(pnl&&pnl.parentElement&&pnl.parentElement!==document.body&&pnl.getBoundingClientRect().height<250)pnl=pnl.parentElement;const pr=pnl&&tm.offsetParent!==null?pnl.getBoundingClientRect():null;
+ const kd=(!hudOn&&!inMatch()&&pr&&pr.width>0)?'block':'none';if(kb.style.display!==kd)kb.style.display=kd;
+ if(pr){let top=pr.top;const eb=[...pnl.parentElement.children].find(x=>x!==pnl&&/Elkapva/i.test(x.textContent||'')&&x.getBoundingClientRect().bottom<=pr.top+30);if(eb)top=Math.min(top,eb.getBoundingClientRect().top);const L=Math.round(pr.left)+'px',T=Math.max(4,Math.round(top-46))+'px',Wd=Math.round(pr.width)+'px';if(kb.style.left!==L)kb.style.left=L;if(kb.style.top!==T)kb.style.top=T;if(kb.style.width!==Wd)kb.style.width=Wd}const kt='🎒 KIT: '+KITS[KIT].e+' '+KITS[KIT].n;if(kb.textContent!==kt)kb.textContent=kt;
  if(!normal()){if(hud.style.display!=='none')hud.style.display='none';return}
  const now=performance.now(),sl=SLOTS(),id=sl[MAG.sel],cd=Math.max(0,((MAG.cd[id]||0)-now)/1000);
  const h='<div>'+KITS[KIT].e+' '+KITS[KIT].n+' · 🔮 '+Math.floor(MAG.mana)+'/'+MAG.max+'</div><div class="bar"><i style="width:'+Math.round(MAG.mana/MAG.max*100)+'%"></i></div><div>'+SP[id][0]+(SP[id][1]?' ('+SP[id][1]+')':'')+(cd>0?' ⏳'+cd.toFixed(0):' ✅')+'</div><div class="sl">'+sl.map((s,i)=>'<b class="'+(i===MAG.sel?'on':'')+'">'+SP[s][0].split(' ')[0]+'</b>').join('')+'</div><div style="opacity:.6;font-size:10px;margin-top:3px">É varázsol · Á vált'+(FLY?' · ✈️ E kiszáll':'')+'</div>';
  if(h!==_hk){_hk=h;hud.innerHTML=h}if(hud.style.display!=='block')hud.style.display='block'}
-setInterval(uiStep,150);
+setInterval(uiStep,150);addEventListener('resize',uiStep);
 
 // =================== BILLENTYŰK ===================
 addEventListener('keydown',e=>{if(typing(e)||!normal())return;
