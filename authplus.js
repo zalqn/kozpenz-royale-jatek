@@ -94,14 +94,14 @@ const caps=document.createElement('div');caps.id='apCaps';caps.textContent='⇪ 
 const avs=document.createElement('div');avs.id='apAvs';const AV=['😎','🤑','🦊','🐸','🤖','👑','🐷','🦁','🥷','🧙'];
 avs.innerHTML=AV.map((a,i)=>'<button type="button" class="'+(i?'':'on')+'">'+a+'</button>').join('');
 const terms=document.createElement('label');terms.id='apTerms';terms.innerHTML='<input type="checkbox" id="apT"> Tudomásul veszem, hogy a közpénz itt csak játékpénz. 😉';
-const row=document.createElement('div');row.id='apRow';row.innerHTML='<label><input type="checkbox" id="apRem" checked> Emlékezz a nevemre</label><label style="margin-left:10px"><input type="checkbox" id="apRemP"> Emlékezz a jelszavamra</label><span id="apCnt"></span>';
+const row=document.createElement('div');row.id='apRow';row.innerHTML='<label><input type="checkbox" id="apRem" checked> Emlékezz a nevemre</label><label style="margin-left:10px"><input type="checkbox" id="apRemP"> Jelszó mentése (böngésző)</label><span id="apCnt"></span>';
 const go=$('auGo');go.before(avs,terms,row);
 const or=document.createElement('div');or.id='apOr';or.textContent='VAGY';$('auG').before(or);$('auG').textContent='🎮 Játék vendégként (offline)';
 
 let avSel=localStorage.getItem('ap_av')||'😎';
 avs.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.textContent===avSel);b.onclick=()=>{avSel=b.textContent;avs.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('apAv').textContent=avSel;$('apAv').animate([{transform:'scale(1.4) rotate(-10deg)'},{transform:'none'}],{duration:350})}});
 const last=localStorage.getItem('ap_name');if(last){N.value=last;setTimeout(()=>P.focus(),300)}
-{const pw=localStorage.getItem('ap_pw');if(pw){try{P.value=decodeURIComponent(escape(atob(pw)))}catch(e){}$('apRemP').checked=true;setTimeout(()=>{try{checkPass()}catch(e){}go.focus()},350)}}
+{const pw=localStorage.getItem('ap_pw');localStorage.removeItem('ap_pw');const fill=v=>{P.value=v;$('apRemP').checked=true;setTimeout(()=>{try{checkPass()}catch(e){}go.focus()},350)};if(pw){try{fill(decodeURIComponent(escape(atob(pw))));if(window.PasswordCredential&&N.value)navigator.credentials.store(new PasswordCredential({id:N.value.trim(),password:P.value})).catch(()=>{})}catch(e){}}else if(window.PasswordCredential&&navigator.credentials){navigator.credentials.get({password:true,mediation:'optional'}).then(c=>{if(c&&c.password){if(!N.value)N.value=c.id;fill(c.password)}}).catch(()=>{})}}
 
 // --- módváltás ---
 let mode='login';
@@ -138,7 +138,7 @@ go.onclick=async()=>{
  if(mode==='reg'&&!$('apT').checked){$('auE').textContent='Pipáld be a feltételt!';shake();return}
  if(localStorage)$('apRem').checked?localStorage.setItem('ap_name',N.value.trim()):localStorage.removeItem('ap_name');
  if(mode==='reg')localStorage.setItem('ap_av',avSel);
- if($('apRemP').checked){$('apRem').checked=true;localStorage.setItem('ap_name',N.value.trim());localStorage.setItem('ap_pw',btoa(unescape(encodeURIComponent(P.value))))}else localStorage.removeItem('ap_pw');
+ localStorage.removeItem('ap_pw');if($('apRemP').checked){$('apRem').checked=true;localStorage.setItem('ap_name',N.value.trim());try{if(window.PasswordCredential)navigator.credentials.store(new PasswordCredential({id:N.value.trim(),password:P.value})).catch(()=>{})}catch(e){}}
  go.classList.add('load');try{await orig()}finally{go.classList.remove('load')}
  if($('auE').textContent)shake()};
 // Enter: lobby.js a doAuth-ot hívja közvetlenül, ezt itt kapjuk el előbb
