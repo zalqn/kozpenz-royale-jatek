@@ -79,13 +79,13 @@ const SP={ // varázslatok: [név, mana, cooldown]
  healwave:['🚑 Gyógyhullám',0,20],shadow:['🥷 Árnyugrás',0,10],quake:['🌋 Földrengés',0,16],drain:['🧛 Életszívás',0,12],meteor:['☄️ Meteor',0,16],blizzard:['🌨️ Jégvihar',0,20],
  nuke:['💣 Nagy bumm',0,20],axes:['🪃 Tomahawkok',0,10],spin:['🌪️ Pörgés',0,14]};
 const kitSp=()=>{const s=KITS[KIT].sp;return s==='heal'?'healwave':s};
-const SLOTS=()=>[kitSp(),'fire','ice','bolt','heal','blink','shield'];
+const EXT={};const SLOTS=()=>[kitSp(),'fire','ice','bolt','heal','blink','shield',...(MAG.extra||[])];
 let MAG={mana:100,max:100,sel:0,cd:{},buf:{},proj:[],fx:[]};
 
 function applyKit(){const g=G,K=KITS[KIT];
  for(let i=0;i<g.own.length;i++)g.own[i]=false;K.w.forEach(i=>{g.own[i]=true;const w=WPN[i];if(w){g.mag[i]=w.mag;g.res[i]=w.res}});g.wp=K.w[0];
  g.mhp+=K.hp;g.hp=Math.max(1,g.hp+K.hp);g.msh+=K.sh;g.sh=Math.max(0,(g.sh||0)+K.sh);if(K.inv)g.inv.hp=(g.inv.hp||0)+K.inv;
- MAG={mana:100+(K.mana||0),max:100+(K.mana||0),sel:0,cd:{},buf:{},proj:[],fx:[]};g._x110spd=K.spd||1;g._x110base=g._spdB||1;
+ const xm=(window._x120mana?window._x120mana():0);MAG={mana:100+(K.mana||0)+xm,max:100+(K.mana||0)+xm,sel:0,cd:{},buf:{},proj:[],fx:[]};g._x110spd=K.spd||1;g._x110base=g._spdB||1;
  setTimeout(()=>sayX(K.e+' '+K.n+' kit! '+SP[kitSp()][0]+' – É: varázslat, Á: váltás'),1500)}
 
 // sebzés-módosítók
@@ -105,7 +105,7 @@ function blinkTo(d){const[fx,fz]=fwd();for(let s=d;s>2;s-=2){const x=G.x+fx*s,z=
 
 function cast(){if(!normal()||G.phase!=='play'||G.dead)return;const id=SLOTS()[MAG.sel],s=SP[id],now=performance.now();
  if((MAG.cd[id]||0)>now){sayX('⏳ '+s[0]+' még '+Math.ceil((MAG.cd[id]-now)/1000)+' mp');return}if(MAG.mana<s[1]){sayX('🔮 Kevés a mana!');return}
- MAG.mana-=s[1];MAG.cd[id]=now+s[2]*1000;const g=G,B=MAG.buf;
+ MAG.mana-=s[1];MAG.cd[id]=now+s[2]*1000*(id===kitSp()&&window._x120cdm?window._x120cdm():1);const g=G,B=MAG.buf;
  switch(id){
   case'fire':shoot({col:0xf97316,dmg:45,boom:4});break;
   case'ice':shoot({col:0x93c5fd,dmg:30,frz:2.5,spd:50});break;
@@ -127,10 +127,11 @@ function cast(){if(!normal()||G.phase!=='play'||G.dead)return;const id=SLOTS()[M
   case'blizzard':enemiesNear(15).forEach(e=>{freeze(e,4);dmgE(e,20,false)});ring(0xe0f2fe,15);break;
   case'nuke':boom(g.x,g.z,9,70,0xfb923c);break;
   case'axes':for(let i=-1;i<=1;i++)shoot({col:0x78716c,dmg:40,off:i*.12,r:.3,spd:45,pierce:1});break;
-  case'spin':B.spin=now+2000;break}
+  case'spin':B.spin=now+2000;break;
+  default:if(EXT[id])EXT[id]()}
  sayX(s[0]+'!')}
 
-function magStep(dt){const now=performance.now();MAG.mana=Math.min(MAG.max,MAG.mana+dt*8);
+function magStep(dt){const now=performance.now();MAG.mana=Math.min(MAG.max,MAG.mana+dt*8*(window._x120regen?window._x120regen():1));
  if(G._x110spd!==undefined){let m=G._x110spd;if(MAG.buf.rage>now)m*=1.5;G._spdB=m*(G._x110base||1)}
  (G.en||[]).forEach(e=>{if(e._frz>now){e.x=e._fx;e.z=e._fz}});
  if(MAG.buf.spin>now){MAG._st=(MAG._st||0)+dt;if(MAG._st>.3){MAG._st=0;enemiesNear(4.5).forEach(e=>dmgE(e,30,false));ring(0xfbbf24,4.5)}}
@@ -199,4 +200,5 @@ WP('end',()=>{FLY=null;PARA=0;G&&(G._x110spd=undefined)});
  if(n==='kit'){const q=String(c).trim().split(/\s+/).slice(1).join(' ').toLowerCase();const i=KITS.findIndex(k=>k.n.toLowerCase()===q);if(i<0)return'🎒 Kitek: '+KITS.map(k=>k.n).join(', ');KIT=i;try{localStorage.setItem('k3x110kit',i)}catch(e){}if(normal())applyKit();return'🎒 Kit: '+KITS[i].e+' '+KITS[i].n}
  return oc?oc(c):null}}
 window._x110=()=>({HILLS,AIR,FLY,MAG,KIT});
+window._x110api={SP,EXT,KITS,kit:()=>KIT,mag:()=>MAG,addExtra(id){if(!MAG.extra)MAG.extra=[];if(!MAG.extra.includes(id))MAG.extra.push(id)},shoot,boom,ring,freeze,enemiesNear,aimed,beam,orb,fly:()=>FLY,spawnAir:spawnFront};
 })();
