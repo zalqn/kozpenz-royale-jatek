@@ -141,7 +141,7 @@ function flash(m){const b=$$('ptBal');b.textContent=m;b.style.color='#f87171';se
 function close(){D.classList.remove('on');cancelAnimationFrame(raf)}
 window.openPets=function(){if(!window.BR){alert('Előbb jelentkezz be!');return}D.classList.add('on');initView();setPreview(P.breed,P.eq);render();cancelAnimationFrame(raf);loop()};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&D.classList.contains('on')){close();e.stopImmediatePropagation()}},true);
-window._PETS={BREEDS,ITEMS,P,refreshLobby};
+window._PETS={BREEDS,ITEMS,P,refreshLobby,BY,save};
 // ---------- LOBBY: a kutya a kamerába néz, forgatható, alatta prémium kapcsoló ----------
 (function(){let dRot=0,dDrag=null,dDown=0,trick=0;
  const css2=document.createElement('style');css2.textContent=`#pfTog{position:fixed;z-index:9;transform:translate(-50%,0);display:none;align-items:center;gap:10px;padding:7px 10px 7px 14px;border-radius:999px;cursor:pointer;user-select:none;font:15px 'Luckiest Guy',Impact;letter-spacing:.5px;color:#fff7d6;

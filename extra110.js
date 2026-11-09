@@ -160,7 +160,7 @@ kb.onclick=openKits;
 let _hk='';
 function uiStep(){const hudOn=$$('hud')&&$$('hud').classList.contains('on');const loggedIn=!$$('ap')||$$('ap').style.display==='none';
  const mp=$$('lbPlayer');const pr=mp&&mp.offsetParent!==null?mp.getBoundingClientRect():null;
- const kd=(!hudOn&&!inMatch()&&pr&&pr.width>0)?'block':'none';if(kb.style.display!==kd)kb.style.display=kd;
+ const _vs=document.getElementById('vs2'),kd=(!hudOn&&!(_vs&&_vs.classList.contains('on'))&&!inMatch()&&pr&&pr.width>0)?'block':'none';if(kb.style.display!==kd)kb.style.display=kd;
  if(pr){let w=pr.width;const bl=[...document.querySelectorAll('body *')].find(x=>x.children.length<4&&/^BÉRLET/.test((x.textContent||'').trim())&&x.getBoundingClientRect().left>pr.left);const br=bl&&bl.getBoundingClientRect();if(br&&br.top<pr.bottom+70&&br.left>pr.left)w=Math.min(w,br.left-pr.left-10);
   const L=Math.round(pr.left)+'px',T=Math.round(pr.bottom+15)+'px',Wd=Math.round(w)+'px';if(kb.style.left!==L)kb.style.left=L;if(kb.style.top!==T)kb.style.top=T;if(kb.style.width!==Wd)kb.style.width=Wd}const kt='🎒 KIT: '+KITS[KIT].e+' '+KITS[KIT].n;if(kb.textContent!==kt)kb.textContent=kt;
  if(!normal()){if(hud.style.display!=='none')hud.style.display='none';return}

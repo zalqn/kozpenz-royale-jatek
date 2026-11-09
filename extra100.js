@@ -68,7 +68,7 @@ WP('update',null,a=>{if(typeof G==='undefined'||!G||G.over)return;const dt=Math.
 WP('end',null,()=>{stopRain();flash.style.opacity=0});
 // ---------- billentyűk ----------
 addEventListener('keydown',e=>{if(typing(e))return;const k=e.key.toLowerCase();
- if(k==='o'){photo(!document.body.classList.contains('xph'));return}
+ if(k==='o')return; // régi fotómód kivezetve (A, 11-08) – az O-t az extra90 kezeli
  if(k==='enter'&&document.body.classList.contains('xph')){snap();e.preventDefault();return}
  if(!gOK()||(typeof GUI!=='undefined'&&GUI.on))return;
  if(k==='h')throwNade();else if(k==='n')placePad();else if(k==='y')placeHeal();

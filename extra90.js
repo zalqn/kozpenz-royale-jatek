@@ -140,4 +140,4 @@ let ringT=0,phK='';setInterval(()=>{const on=inMatch()&&G.phase==='play'&&!CAM.o
 console.log('extra90 betöltve');
 })();
 // a régi (extra100) fotómód kikapcsolása: az O gomb mostantól az új fotómódot nyitja
-setInterval(()=>{if(document.body.classList.contains('xph')){document.body.classList.remove('xph');const x=document.getElementById('xPhoto');if(x)x.style.display='none'}},150);
+// (A, 11-08) a régi extra100 fotómód O-ja kivezetve, így az xph-törlő időzítő sem kell (a csapatfotó – social.js – így végig rejti a felületet)

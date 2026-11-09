@@ -116,6 +116,7 @@ window.x10spin=free=>{if(SLOT.spin)return;const b=free?50:SLOT.bet;if(free){if(L
  const iv=setInterval(()=>{t++;for(let i=0;i<3;i++){const el=$$('x10r'+i);if(!el){clearInterval(iv);SLOT.spin=false;return}el.textContent=t<8+i*5?SY[Math.floor(Math.random()*6)]:fin[i]}try{tn(300+t*20,'square',.03,.04)}catch(e){}
   if(t>=18){clearInterval(iv);SLOT.spin=false;SLOT.r=fin;let m=0;if(fin[0]===fin[1]&&fin[1]===fin[2])m=SM[fin[0]];else if(fin[0]===fin[1]||fin[1]===fin[2]||fin[0]===fin[2])m=1.5;else if(fin.includes('🍒'))m=.5;
    const w=Math.round(b*m);pay(w);SLOT.res=w>0?'🎉 +'+w+' zseton':'Nem nyert.';if(m>=100){stat('jack');toast('7️⃣7️⃣7️⃣ FŐNYEREMÉNY!')}stat('slot');slDraw()}},70)};
+window._x10k={LIM,canBet,bet,pay,SLOT,SY,SM,rollSym,slDraw,stat,today,SV,toast,PK};
 
 // =====================================================================
 // 10) BILLENTYŰ-ÁTÁLLÍTÁS + KONTROLLER

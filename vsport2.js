@@ -198,5 +198,5 @@ function tickUI(){const now=Date.now();$$('v2Bal').textContent='💵 '+ft(bal())
  $$('v2Next').innerHTML='🗓️ '+OPEN.no+'. forduló kezdése: <b style="color:#facc15">'+fmtT(OPEN.kick-now)+'</b>';['v2Cd','v2Cd2'].forEach(i=>{const e=$$(i);if(e)e.textContent=fmtT(OPEN.kick-now)});
  if(tab==='live')liveUI();if(tab==='my'&&now-lastFull>1000&&DB.slips.length){lastFull=now;const sc=$$('v2Main').scrollTop;render();$$('v2Main').scrollTop=sc}}
 // lobby/régi hivatkozások
-window._VS2={DB,get OPEN(){return OPEN},get CUR(){return CUR}};
+window._VS2={DB,TM,get OPEN(){return OPEN},get CUR(){return CUR}};
 })();
